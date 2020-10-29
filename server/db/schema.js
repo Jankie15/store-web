@@ -67,6 +67,7 @@ const typeDefs = gql`
         getUsers: [User]
         getProducts: [Product]
         getOrders: [Order]
+        getOrderByUser(id: ID): [Order]
     }
 
     type Mutation{
@@ -79,7 +80,7 @@ const typeDefs = gql`
         updateProduct(id: ID, input: ProductInput): String
         deleteProduct(id: ID): String
 
-        #Olders
+        #Orders
         createOrder(input: OrderInput): String
         updateOrder(id: ID, input: OrderInput): String   
     }

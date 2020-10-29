@@ -29,6 +29,10 @@ const resolvers = {
         getOrders: async(root, {})=>{
             const order = await Orders.find({});
             return order;
+        },
+        getOrderByUser: async(root, {id})=>{
+            const orders = await Orders.find({user_id: id});
+            return orders;
         }
     },
     Mutation:{
