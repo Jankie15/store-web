@@ -1,8 +1,8 @@
 import React from 'react';
-
+import Login from './componets/login/login'
 const App = () => {
   return (
-    <h1>Hola</h1>
+   <Login/>
   );
 }
 
