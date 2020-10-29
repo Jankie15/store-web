@@ -42,7 +42,7 @@ const typeDefs = gql`
     }
 
     input ProductOrderInput{
-        product: ProductInput
+        product_id: ID!
         quantity: Int
     }
 
