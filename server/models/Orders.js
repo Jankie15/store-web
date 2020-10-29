@@ -18,7 +18,7 @@ const OrdertSchema = new mongoose.Schema({
         required: true,
     },
     status:{
-        type: Array,
+        type: String,
         required: true,
     },
     estimated_date:{
