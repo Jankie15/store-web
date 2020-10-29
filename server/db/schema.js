@@ -65,6 +65,8 @@ const typeDefs = gql`
 
         # Products
         createProduct(input: ProductInput): String
+        updateProduct(id: ID, input: ProductInput): String
+        deleteProduct(id: ID): String
     }
 `;
 

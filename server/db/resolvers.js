@@ -72,6 +72,32 @@ const resolvers = {
                 console.log(error);
             }
         },
+        updateProduct: async(root, {id, input})=>{
+            // Revisar si la tarea existe
+            let product = await Products.findById(id);
+
+            if (!product){
+                throw new Error('Producto no encontrado');
+            }
+
+            // Actualizar la tarea
+            product = await Products.findOneAndUpdate({_id: id}, input);
+
+            return "Producto editado correctamente";
+        },
+        deleteProduct: async(root, {id})=>{
+            // Revisar si el tarea existe
+            let product = await Products.findById(id);
+
+            if (!product){
+                throw new Error('Producto no encontrado');
+            }
+ 
+            // Eliminar tarea
+            await Products.findOneAndDelete({_id: id});
+            
+            return 'Producto eliminado con éxito';
+        },
         //----------------------------------------
         // Orders
         //----------------------------------------
