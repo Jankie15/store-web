@@ -56,11 +56,11 @@ const typeDefs = gql`
 
     input OrderInput {
         products: [ProductOrderInput]
-        user_id: ID!
-        total: Int!
-        date: String!
-        status: OrderStatus!
-        estimated_date: String!
+        user_id: ID
+        total: Int
+        date: String
+        status: OrderStatus
+        estimated_date: String
     }
     
     type Query{
@@ -68,6 +68,7 @@ const typeDefs = gql`
         getProducts: [Product]
         getOrders: [Order]
     }
+
     type Mutation{
         # Users
         createUser(input: UserInput): String
@@ -79,6 +80,7 @@ const typeDefs = gql`
 
         #Olders
         createOrder(input: OrderInput): String
+        updateOrder(id: ID, input: OrderInput): String   
     }
 `;
 

@@ -117,6 +117,19 @@ const resolvers = {
                 console.log(error);
             }
         },
+        updateOrder: async(root, {id, input})=>{
+            // Revisar si el prodcuto existe
+            let order = await Orders.findById(id);
+
+            if (!order){
+                throw new Error('Orden no encontrada');
+            }
+
+            // Actualizar la prodcuto
+            order = await Orders.findOneAndUpdate({_id: id}, input);
+
+            return "Orden editada correctamente";
+        },
 
     }
 }
