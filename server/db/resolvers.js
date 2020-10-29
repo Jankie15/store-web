@@ -37,30 +37,38 @@ const resolvers = {
         //----------------------------------------
         createUser: async(root, {input})=>{
             try {
+                // Extraer la contraseña
+                const {password} = input;
+
+                 // Encriptar contraseña
+                const salt = await bcrypt.genSalt(10);
+                input.password = await bcrypt.hash(password, salt);
+
+                // Guardar usuario
                 const user = new Users(input);
-
-                // Almacenar en la base de datos
-                const resultado = await user.save();
-
+                user.save();
                 return "Guardado exitosamente";
             } catch (error) {
                 console.log(error);
             }
         },
-        /*
-        updateUser: async(root, {input})=>{
-            try {
-                const user = new Users(input);
 
-                // Almacenar en la base de datos
-                const resultado = await user.find();
+        
+        authUser: async(root, {input}) =>{
+            const {email, password} = input;
 
-                return "Guardado exitosamente";
-            } catch (error) {
-                console.log(error);
+            // Si el usuario existe
+            const user = await Users.findOne({email});
+
+            // Si el password existe
+            const correctPassword = await bcrypt.compare(password, user.password);
+            if(!correctPassword){
+                throw new Error('La contraseña es incorrecta');
             }
+
+            // Dar acceso a la app
+            return "Acceso permitido";
         },
-        */
         //----------------------------------------
         // Products
         //----------------------------------------

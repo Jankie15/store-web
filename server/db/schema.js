@@ -38,7 +38,7 @@ const typeDefs = gql`
     }
     
     input UserInput {
-        name: String!
+        name: String
         email: String!
         password: String!
     }
@@ -71,6 +71,7 @@ const typeDefs = gql`
     type Mutation{
         # Users
         createUser(input: UserInput): String
+        authUser(input: UserInput):String
 
         # Products
         createProduct(input: ProductInput): String
