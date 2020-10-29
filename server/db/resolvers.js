@@ -22,10 +22,14 @@ const resolvers = {
         getProducts: async(root, {})=>{
             const products = await Products.find({});
             return products;
-        }
+        },
         //----------------------------------------
         // Orders
         //----------------------------------------
+        getOrders: async(root, {})=>{
+            const order = await Orders.find({});
+            return order;
+        }
     },
     Mutation:{
         //----------------------------------------
@@ -75,6 +79,19 @@ const resolvers = {
         //----------------------------------------
         // Orders
         //----------------------------------------
+        createOrder: async(root, {input})=>{
+            try {
+                const order = new Orders(input);
+
+                // Almacenar en la base de datos
+                const resultado = await order.save();
+
+                return "Guardado exitosamente";
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
     }
 }
 
