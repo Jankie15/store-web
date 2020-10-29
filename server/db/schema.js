@@ -11,7 +11,7 @@ const typeDefs = gql`
     type Product {
         name: String
         photo: String
-        value: String
+        value: Int
     }
 
     type Order {
@@ -38,7 +38,7 @@ const typeDefs = gql`
     input ProductInput {
         name: String!
         photo: String
-        value: String!
+        value: Int!
     }
 
     input ProductOrderInput{
@@ -57,10 +57,14 @@ const typeDefs = gql`
     
     type Query{
         getUsers: [User]
+        getProducts: [Product]
     }
     type Mutation{
         # Users
         createUser(input: UserInput): String
+
+        # Products
+        createProduct(input: ProductInput): String
     }
 `;
 

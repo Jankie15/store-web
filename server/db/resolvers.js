@@ -9,13 +9,28 @@ const Users = require('../models/Users');
 
 const resolvers = {
     Query: {
+        //----------------------------------------
+        // Users
+        //----------------------------------------
         getUsers: async(root, {})=>{
             const users = await Users.find({});
-
             return users;
+        },
+        //----------------------------------------
+        // Products
+        //----------------------------------------
+        getProducts: async(root, {})=>{
+            const products = await Products.find({});
+            return products;
         }
+        //----------------------------------------
+        // Orders
+        //----------------------------------------
     },
     Mutation:{
+        //----------------------------------------
+        // Users
+        //----------------------------------------
         createUser: async(root, {input})=>{
             try {
                 const user = new Users(input);
@@ -28,6 +43,38 @@ const resolvers = {
                 console.log(error);
             }
         },
+        /*
+        updateUser: async(root, {input})=>{
+            try {
+                const user = new Users(input);
+
+                // Almacenar en la base de datos
+                const resultado = await user.find();
+
+                return "Guardado exitosamente";
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        */
+        //----------------------------------------
+        // Products
+        //----------------------------------------
+        createProduct: async(root, {input})=>{
+            try {
+                const product = new Products(input);
+
+                // Almacenar en la base de datos
+                const resultado = await product.save();
+
+                return "Guardado exitosamente";
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //----------------------------------------
+        // Orders
+        //----------------------------------------
     }
 }
 
