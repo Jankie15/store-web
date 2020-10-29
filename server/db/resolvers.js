@@ -77,27 +77,27 @@ const resolvers = {
             }
         },
         updateProduct: async(root, {id, input})=>{
-            // Revisar si la tarea existe
+            // Revisar si el prodcuto existe
             let product = await Products.findById(id);
 
             if (!product){
                 throw new Error('Producto no encontrado');
             }
 
-            // Actualizar la tarea
+            // Actualizar la prodcuto
             product = await Products.findOneAndUpdate({_id: id}, input);
 
             return "Producto editado correctamente";
         },
         deleteProduct: async(root, {id})=>{
-            // Revisar si el tarea existe
+            // Revisar si el prodcuto existe
             let product = await Products.findById(id);
 
             if (!product){
                 throw new Error('Producto no encontrado');
             }
  
-            // Eliminar tarea
+            // Eliminar prodcuto
             await Products.findOneAndDelete({_id: id});
             
             return 'Producto eliminado con éxito';
