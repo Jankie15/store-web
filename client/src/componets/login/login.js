@@ -1,117 +1,126 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
+import React, {useState} from 'react';
+import { useMutation } from '@apollo/client';
+import { withRouter, Link } from "react-router-dom";
+
+// Interfaz
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-       H O R I Z O N 
-      </Link>{'  '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+// Mutations
+import {AUTH_USER} from '../../mutation/index';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
 
-export default function SignIn() {
-  const classes = useStyles();
+
+const Login = ({history}) => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [authUser] = useMutation(AUTH_USER);
+
+  const handleLogin = async () =>{
+    const input = {
+      email,
+      password
+    };
+    
+    try {
+      const sesion = await authUser({variables:{input}});
+      
+      console.log(sesion);
+      if(sesion.data.authUser === 'Acceso permitido'){
+        history.push(`/home`);
+      }
+    } catch (error) {
+      console.log('Nel');
+    }
+    setEmail('');
+    setPassword('');
+  }
+
+  const style = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+      width: '100%', // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+  }));
+
+  const styles = style();
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
+      <div className={styles.paper}>
+        <Typography component="h1" variant="h3">
+          Iniciar Sesíon
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={styles.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Correo Electronico"
             name="email"
             autoComplete="email"
+            value={email}
+            onChange={(e)=>{setEmail(e.target.value)}}
             autoFocus
           />
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             name="password"
-            label="Password"
+            label="Contraseña"
             type="password"
             id="password"
+            value={password}
+            onChange={(e)=>{setPassword(e.target.value)}}
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
-            type="submit"
+            type="button"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            className={styles.submit}
+            onClick={()=>handleLogin()}
           >
-            Sign In
+            Iniciar Sesión
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
+          <Grid 
+            container
+            alignItems="center"
+          >
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link to= "/registrar" variant="body2">
+                ¿No tienes cuenta? Registrate
               </Link>
             </Grid>
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
+
+export default withRouter(Login);
+

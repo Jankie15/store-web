@@ -17,3 +17,9 @@ mutation updateOrder($id:ID, $input: OrderInput){
     updateOrder(id:$id, input:$input)
 }
 `;
+
+export const CREATE_USER = gql`
+mutation createUser($input: UserInput){
+	createUser(input: $input)
+}
+`;
