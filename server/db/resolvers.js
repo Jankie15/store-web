@@ -71,7 +71,7 @@ const resolvers = {
             }
 
             // Dar acceso a la app
-            return "Acceso permitido";
+            return user;
         },
         //----------------------------------------
         // Products

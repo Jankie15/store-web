@@ -2,7 +2,11 @@ import {gql} from '@apollo/client';
 
 export const AUTH_USER = gql`
 mutation authUser($input: UserInput){
-    authUser(input: $input)
+    authUser(input: $input){
+        id
+        name
+        email
+    }
 }
 `;
 

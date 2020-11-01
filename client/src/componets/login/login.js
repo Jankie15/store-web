@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
+import Collapse from '@material-ui/core/Collapse';
 
 // Mutations
 import {AUTH_USER} from '../../mutation/index';
@@ -20,26 +22,47 @@ const Login = ({history}) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertText, setAlertText] = useState('');
   const [authUser] = useMutation(AUTH_USER);
 
   const handleLogin = async () =>{
-    const input = {
-      email,
-      password
-    };
-    
-    try {
-      const sesion = await authUser({variables:{input}});
-      
-      console.log(sesion);
-      if(sesion.data.authUser === 'Acceso permitido'){
-        history.push(`/home`);
-      }
-    } catch (error) {
-      console.log('Nel');
+    if(email==='' || password===''){
+      setShowAlert(true);
+      setAlertText('Por favor rellene los campos');
+      setTimeout(() => {
+        setShowAlert(false);
+        setAlertText('')
+      }, 3000);
     }
-    setEmail('');
-    setPassword('');
+    else{
+      const input = {
+        email,
+        password
+      };
+      
+      try {
+        const sesion = await authUser({variables:{input}});
+        
+        console.log(sesion);
+        if(sesion.data.authUser.id){
+          localStorage.clear();
+          history.push(`/home`);
+          localStorage.setItem('id', sesion.data.authUser.id);
+          localStorage.setItem('name', sesion.data.authUser.name);
+          localStorage.setItem('email', sesion.data.authUser.email);
+        }
+      } catch (error) {
+        setShowAlert(true);
+        setAlertText('El correo electronico o la contraseña es incorrecta');
+        setTimeout(() => {
+          setShowAlert(false);
+          setAlertText('')
+        }, 3000);
+      }
+      setEmail('');
+      setPassword('');
+    }
   }
 
   const style = makeStyles((theme) => ({
@@ -106,6 +129,11 @@ const Login = ({history}) => {
           >
             Iniciar Sesión
           </Button>
+
+          <Collapse in={showAlert}>
+            <Alert severity="error">{alertText}</Alert>
+            <br/>
+          </Collapse>
           <Grid 
             container
             alignItems="center"
