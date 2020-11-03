@@ -1,33 +1,37 @@
-import React from 'react';
+import React ,{useState}from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import StarIcon from '@material-ui/icons/StarBorder';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import GridList from '@material-ui/core/GridList';
+import {CardMedia} from '@material-ui/core';
+import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
+import IconButton from '@material-ui/core/IconButton';
+
+import { useQuery } from '@apollo/client';
+import {GET_PRODUCTS} from '../../query/index';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        H O R I Z O N   
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
 }
-
 const useStyles = makeStyles((theme) => ({
   '@global': {
     ul: {
@@ -72,41 +76,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-const tiers = [
-  {
-    title: 'Free',
-    price: '0',
-    description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
-    buttonText: 'Sign up for free',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Pro',
-    subheader: 'Most popular',
-    price: '15',
-    description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-    ],
-    buttonText: 'Get started',
-    buttonVariant: 'contained',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
-    ],
-    buttonText: 'Contact us',
-    buttonVariant: 'outlined',
-  },
-];
 const footers = [
   {
     title: 'Company',
@@ -126,9 +95,21 @@ const footers = [
   },
 ];
 
-export default function Pricing() {
+const Home = ()=>{
+
+ 
   const classes = useStyles();
 
+  let products = [];
+  const addProductToCarr = (value)=>{
+    products.push(value);
+    console.log(products);
+  }
+
+
+  const {loading, error, data} = useQuery(GET_PRODUCTS);
+    if (loading) return 'Loading...';
+    if (error) return `Error! ${error.message}`;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -168,46 +149,42 @@ export default function Pricing() {
 
       {/* End hero unit */}
       <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
-          {tiers.map((tier) => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid item key={tier.title} xs={12} sm={tier.title === 'Enterprise' ? 12 : 6} md={4}>
-              <Card>
-                <CardHeader
-                  title={tier.title}
-                  subheader={tier.subheader}
-                  titleTypographyProps={{ align: 'center' }}
-                  subheaderTypographyProps={{ align: 'center' }}
-                  action={tier.title === 'Pro' ? <StarIcon /> : null}
-                  className={classes.cardHeader}
-                />
-                <CardContent>
-                  <div className={classes.cardPricing}>
-                    <Typography component="h2" variant="h3" color="textPrimary">
-                      ${tier.price}
-                    </Typography>
-                    <Typography variant="h6" color="textSecondary">
-                      /mo
-                    </Typography>
-                  </div>
-                  <ul>
-                    {tier.description.map((line) => (
-                      <Typography component="li" variant="subtitle1" align="center" key={line}>
-                        {line}
-                      </Typography>
-                    ))}
-                  </ul>
-                </CardContent>
-
-                <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant} color="primary">
-                    {tier.buttonText}
-                  </Button>
+      
+      <GridList cellHeight={"auto"} className={classes.gridList} cols={3} spacing ={20}>
+              {data.getProducts.map((pro) => (
+                   
+                 <Card className={classes.root}>
+              
+                   <CardMedia
+                     className={classes.media}
+                     title="Producto"
+                     component = "img"
+                     height="auto"
+                     image={pro.photo}
+                   />
+                   <CardContent>
+                     <Typography gutterBottom variant="h5" component="h2">
+                      {pro.name}
+                     </Typography>            
+                   </CardContent>
+               
+                 <CardActions disableSpacing >
+                 <IconButton aria-label="Agregar al carrito" onClick={()=>addProductToCarr(pro.id)}>
+                    <ShoppingCartRounded fontSize ='large'/>
+                   
+                  </IconButton>
+                  <Typography gutterBottom variant="h6" component="h2">
+                      {pro.value}  Colones
+                  </Typography>
+                  
+                  
                 </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+               </Card>
+              ))}
+            </GridList>
+            
+            
+        
       </Container>
       
       {/* Footer */}
@@ -238,3 +215,5 @@ export default function Pricing() {
     </React.Fragment>
   );
 }
+
+export default Home;
