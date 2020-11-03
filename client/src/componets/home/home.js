@@ -1,4 +1,4 @@
-import React ,{useState}from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -13,19 +13,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import GridList from '@material-ui/core/GridList';
-import {CardMedia} from '@material-ui/core';
+import { CardMedia } from '@material-ui/core';
 import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
 import IconButton from '@material-ui/core/IconButton';
+import Badge from '@material-ui/core/Badge';
 
 import { useQuery } from '@apollo/client';
-import {GET_PRODUCTS} from '../../query/index';
+import { GET_PRODUCTS } from '../../query/index';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        H O R I Z O N   
+        H O R I Z O N
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -95,29 +96,36 @@ const footers = [
   },
 ];
 
-const Home = ()=>{
+const Home = () => {
 
- 
+
   const classes = useStyles();
 
   let products = [];
-  const addProductToCarr = (value)=>{
+
+  //const [productsCout, setproductsCout] = useState();
+
+  const addProductToCarr = (value) => {
+
     products.push(value);
     console.log(products);
   }
 
 
-  const {loading, error, data} = useQuery(GET_PRODUCTS);
-    if (loading) return 'Loading...';
-    if (error) return `Error! ${error.message}`;
+  const { loading, error, data } = useQuery(GET_PRODUCTS);
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`;
+
+  
   return (
+
     <React.Fragment>
       <CssBaseline />
 
       <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-           H O R I Z O N
+            H O R I Z O N
           </Typography>
           <nav>
             <Link variant="button" color="textPrimary" href="#" className={classes.link}>
@@ -130,9 +138,14 @@ const Home = ()=>{
               ORDENES
             </Link>
           </nav>
-          <Button href="#" color="primary" variant="outlined" className={classes.link}>
-            Carrito
-          </Button>
+
+          <IconButton aria-label="Carrito" color="inherit">
+
+            <Badge badgeContent= {5} color="secondary">
+              <ShoppingCartRounded />
+            </Badge>
+          </IconButton>
+
         </Toolbar>
       </AppBar>
 
@@ -149,44 +162,44 @@ const Home = ()=>{
 
       {/* End hero unit */}
       <Container maxWidth="md" component="main">
-      
-      <GridList cellHeight={"auto"} className={classes.gridList} cols={3} spacing ={20}>
-              {data.getProducts.map((pro) => (
-                   
-                 <Card className={classes.root}>
-              
-                   <CardMedia
-                     className={classes.media}
-                     title="Producto"
-                     component = "img"
-                     height="auto"
-                     image={pro.photo}
-                   />
-                   <CardContent>
-                     <Typography gutterBottom variant="h5" component="h2">
-                      {pro.name}
-                     </Typography>            
-                   </CardContent>
-               
-                 <CardActions disableSpacing >
-                 <IconButton aria-label="Agregar al carrito" onClick={()=>addProductToCarr(pro.id)}>
-                    <ShoppingCartRounded fontSize ='large'/>
-                   
-                  </IconButton>
-                  <Typography gutterBottom variant="h6" component="h2">
-                      {pro.value}  Colones
+
+        <GridList cellHeight={"auto"} className={classes.gridList} cols={3} spacing={20}>
+          {data.getProducts.map((pro) => (
+
+            <Card className={classes.root}>
+
+              <CardMedia
+                className={classes.media}
+                title="Producto"
+                component="img"
+                height="auto"
+                image={pro.photo}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {pro.name}
+                </Typography>
+              </CardContent>
+
+              <CardActions disableSpacing >
+                <IconButton aria-label="Agregar al carrito" onClick={() => addProductToCarr(pro.id)}>
+                  <ShoppingCartRounded fontSize='large' />
+
+                </IconButton>
+                <Typography gutterBottom variant="h6" component="h2">
+                  {pro.value}  Colones
                   </Typography>
-                  
-                  
-                </CardActions>
-               </Card>
-              ))}
-            </GridList>
-            
-            
-        
+
+
+              </CardActions>
+            </Card>
+          ))}
+        </GridList>
+
+
+
       </Container>
-      
+
       {/* Footer */}
       <Container maxWidth="md" component="footer" className={classes.footer}>
         <Grid container spacing={4} justify="space-evenly">
