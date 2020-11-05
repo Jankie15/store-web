@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -13,6 +14,8 @@ import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import WarningIcon from '@material-ui/icons/Warning';
 import { blue, green, red } from '@material-ui/core/colors';
 
+import {CREATE_ORDER} from '../../mutation/index'
+
 const useStyles = makeStyles({
     avatar: {
         backgroundColor: blue[100],
@@ -25,25 +28,53 @@ const useStyles = makeStyles({
         backgroundColor: red[100],
         color: red[600],
     },
+    
     shop: {
-
+        
         backgroundColor: green[100],
         color: green[600],
     }
 });
 
 const SimpleDialog = (props) => {
+
+    const [products, setProducts] = useState([{}]);
+    const [userID, setuserID] = useState('5fa18970a74f3f345c0cf80b');
+    const [total, setTotal] = useState(0);
+    const [date, setDate] = useState(new Date());
+    const [status, setStatus] = useState('PROCESANDO');
+    const [createOrder] = useMutation(CREATE_ORDER);
+
     const classes = useStyles();
     const { onClose, selectedValue, open } = props;
-
 
     const handleClose = () => {
         onClose(selectedValue);
     };
 
-    const buyProducts = (value) => {
-        console.log(value);
-        onClose(value);
+    const buyProducts = async(value) => {
+        const input = {
+            products,
+            userID,
+            total,
+            date,
+            status
+        }
+        try{
+            const correctOrder = await createOrder({variables: {input}})
+            if(correctOrder.data.createOrder === 'Guardado exitosamente'){
+                onClose(value);
+              }
+        }catch (error) {
+            console.log('Hola');
+        }
+        
+        /*value.map((index) => index.value != null ?  (
+           
+            console.log(index.value.id)
+        ): '')*/
+       
+        
     };
 
     //let total = 0;
