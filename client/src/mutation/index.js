@@ -6,6 +6,7 @@ mutation authUser($input: UserInput){
         id
         name
         email
+        type
     }
 }
 `;
@@ -17,8 +18,8 @@ mutation createOrder($input: OrderInput){
 `;
 
 export const UPDATE_ORDER = gql`
-mutation updateOrder($id:ID, $input: OrderInput){
-    updateOrder(id:$id, input:$input)
+mutation updateOrder($input: OrderInput){
+    updateOrder(input:$input)
 }
 `;
 

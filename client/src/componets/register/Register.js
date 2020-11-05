@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
+import Collapse from '@material-ui/core/Collapse';
 
 // Mutations
 import {CREATE_USER} from '../../mutation/index';
@@ -19,13 +21,15 @@ const Register = ({history}) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
     const [createUser] = useMutation(CREATE_USER);
 
     const handleRegister = async() => {
         const input = {
             name,
             email,
-            password
+            password,
+            type: 'Normal'
           };
           
           try {
@@ -35,11 +39,16 @@ const Register = ({history}) => {
               history.push(`/`);
             }
           } catch (error) {
-              console.log('Hola');
+
+            setName('');
+            setEmail('');
+            setPassword('');
+            setShowAlert(true);
+            setTimeout(() => {
+              setShowAlert(false);
+            }, 3000);
           }
-          setName('');
-          setEmail('');
-          setPassword('');
+          
     }
 
 
@@ -124,6 +133,10 @@ const Register = ({history}) => {
                 >
                     Registrar
                 </Button>
+
+                <Collapse in={showAlert}>
+                    <Alert severity="error">Hubo un error al registrar</Alert>
+                </Collapse>
             </form>
         </div>
         </Container>

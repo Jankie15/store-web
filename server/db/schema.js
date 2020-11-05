@@ -7,6 +7,7 @@ const typeDefs = gql`
         name: String
         email: String
         password: String
+        type: String
     }
 
     type Product {
@@ -33,7 +34,7 @@ const typeDefs = gql`
 
     enum OrderStatus{
         PROCESANDO
-        EN CAMINO
+        TRANSITO
         RECIBIDO
     }
     
@@ -41,6 +42,7 @@ const typeDefs = gql`
         name: String
         email: String!
         password: String!
+        type: String
     }
 
     input ProductInput {
@@ -55,6 +57,7 @@ const typeDefs = gql`
     }
 
     input OrderInput {
+        id: ID
         products: [ProductOrderInput]
         user_id: ID
         total: Int
@@ -82,7 +85,7 @@ const typeDefs = gql`
 
         #Orders
         createOrder(input: OrderInput): String
-        updateOrder(id: ID, input: OrderInput): String   
+        updateOrder(input: OrderInput): String   
     }
 `;
 

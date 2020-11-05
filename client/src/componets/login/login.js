@@ -45,14 +45,25 @@ const Login = ({history}) => {
         const sesion = await authUser({variables:{input}});
         
         console.log(sesion);
-        if(sesion.data.authUser.id){
+        if(sesion.data.authUser.id && sesion.data.authUser.type === 'Normal'){
           localStorage.clear();
           history.push(`/home`);
           localStorage.setItem('id', sesion.data.authUser.id);
           localStorage.setItem('name', sesion.data.authUser.name);
           localStorage.setItem('email', sesion.data.authUser.email);
+          localStorage.setItem('type', sesion.data.authUser.type);
+        }
+        if(sesion.data.authUser.id && sesion.data.authUser.type === 'Admin'){
+          localStorage.clear();
+          history.push(`/admin`);
+          localStorage.setItem('id', sesion.data.authUser.id);
+          localStorage.setItem('name', sesion.data.authUser.name);
+          localStorage.setItem('email', sesion.data.authUser.email);
+          localStorage.setItem('type', sesion.data.authUser.type);
         }
       } catch (error) {
+        setEmail('');
+        setPassword('');
         setShowAlert(true);
         setAlertText('El correo electronico o la contraseña es incorrecta');
         setTimeout(() => {
@@ -60,8 +71,7 @@ const Login = ({history}) => {
           setAlertText('')
         }, 3000);
       }
-      setEmail('');
-      setPassword('');
+      
     }
   }
 

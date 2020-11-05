@@ -129,16 +129,16 @@ const resolvers = {
                 console.log(error);
             }
         },
-        updateOrder: async(root, {id, input})=>{
+        updateOrder: async(root, {input})=>{
             // Revisar si el prodcuto existe
-            let order = await Orders.findById(id);
+            let order = await Orders.findById(input.id);
 
             if (!order){
                 throw new Error('Orden no encontrada');
             }
 
             // Actualizar la prodcuto
-            order = await Orders.findOneAndUpdate({_id: id}, input);
+            order = await Orders.findOneAndUpdate({_id: input.id}, input);
 
             return "Orden editada correctamente";
         },
