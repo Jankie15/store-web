@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,6 +16,7 @@ import { CardMedia } from '@material-ui/core';
 import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
+import SimpleDialog from './carrShoping';
 
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../query/index';
@@ -98,25 +98,38 @@ const footers = [
 
 const Home = () => {
 
-
   const classes = useStyles();
 
-  let products = [];
+  const [products, setProducts] = useState([{}]);
+  const [productsCout, setproductsCout] = useState(0);
 
-  //const [productsCout, setproductsCout] = useState();
+  const emails = ['username@gmail.com', 'user02@gmail.com'];
 
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(emails[1]);
+////////////////////////////////////////////////////////////////////////
+//Carrito
+////////////////////////////////////////////////////////////////////////
   const addProductToCarr = (value) => {
-
-    products.push(value);
-    console.log(products);
+    
+    setProducts(products=> [...products,{value}]);
+    setproductsCout(productsCout + 1);
   }
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
   const { loading, error, data } = useQuery(GET_PRODUCTS);
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-
-  
+  //console.log(products[1].value.name);
   return (
 
     <React.Fragment>
@@ -139,12 +152,12 @@ const Home = () => {
             </Link>
           </nav>
 
-          <IconButton aria-label="Carrito" color="inherit">
-
-            <Badge badgeContent= {5} color="secondary">
+          <IconButton aria-label="Carrito" color="inherit" onClick={handleClickOpen}>
+            <Badge badgeContent= {productsCout} color="secondary">
               <ShoppingCartRounded />
             </Badge>
           </IconButton>
+          <SimpleDialog selectedValue={selectedValue} open={open} carItems={products} onClose={handleClose} />
 
         </Toolbar>
       </AppBar>
@@ -182,9 +195,8 @@ const Home = () => {
               </CardContent>
 
               <CardActions disableSpacing >
-                <IconButton aria-label="Agregar al carrito" onClick={() => addProductToCarr(pro.id)}>
+                <IconButton aria-label="Agregar al carrito" onClick={() => addProductToCarr(pro)}>
                   <ShoppingCartRounded fontSize='large' />
-
                 </IconButton>
                 <Typography gutterBottom variant="h6" component="h2">
                   {pro.value}  Colones
