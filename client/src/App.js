@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 
 import Home from './componets/home/home';
-import Login from './componets/login/Login';
+import Login from './componets/login/login';
 import OrderAdmin from './componets/orderAdmin/OrderAdmin';
 import Register from './componets/register/Register';
+import UserOrder from './componets/userOrders/UserOrder';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route exact path="/home" component={Home} />
         <Route exact path="/registrar" component={Register} />
         <Route exact path="/admin" component={OrderAdmin} />
+        <Route exact path="/orders" component={UserOrder} />
       </Switch>
     </Router>
   );
