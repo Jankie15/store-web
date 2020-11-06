@@ -38,7 +38,7 @@ const useStyles = makeStyles({
 
 const SimpleDialog = (props) => {
 
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState([]);
     const [user_id, setuser_id] = useState(localStorage.getItem('id'));
     const [total, setTotal] = useState(0);
     const [date, setDate] = useState(new Date());
@@ -91,7 +91,7 @@ const SimpleDialog = (props) => {
             }       
         }
         setProducts(listaApo);
-        console.log(products);       
+        console.log(input);       
         
         try{
             const correctOrder = await createOrder({variables: {input}})
