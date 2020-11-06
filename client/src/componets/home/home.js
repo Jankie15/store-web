@@ -1,38 +1,12 @@
 import React, { useState } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import GridList from '@material-ui/core/GridList';
-import { CardMedia } from '@material-ui/core';
+import {AppBar, Card, CardActions, CardContent, CssBaseline, Toolbar, Typography, CardMedia, makeStyles, Container, Box, GridList, IconButton, Badge} from '@material-ui/core/';
 import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import SimpleDialog from './carrShoping';
 
+import SimpleDialog from './carrShoping';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../query/index';
+import { withRouter, Link } from 'react-router-dom';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        H O R I Z O N
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 const useStyles = makeStyles((theme) => ({
   '@global': {
     ul: {
@@ -77,26 +51,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const footers = [
-  {
-    title: 'Company',
-    description: ['Team', 'History', 'Contact us', 'Locations'],
-  },
-  {
-    title: 'Features',
-    description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
-  },
-  {
-    title: 'Resources',
-    description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
-  },
-  {
-    title: 'Legal',
-    description: ['Privacy policy', 'Terms of use'],
-  },
-];
 
-const Home = () => {
+const Home = ({history}) => {
 
   const classes = useStyles();
 
@@ -124,12 +80,16 @@ const Home = () => {
     setOpen(false);
     setSelectedValue(value);
   };
+
+  const logout = () =>{
+    history.push(`/`);
+    localStorage.clear();
+  }
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
   const { loading, error, data } = useQuery(GET_PRODUCTS);
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-  //console.log(products[1].value.name);
   return (
     <>
       <CssBaseline />
@@ -139,22 +99,21 @@ const Home = () => {
             H O R I Z O N
           </Typography>
           <nav>
-            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
-              INICIO
+            <IconButton aria-label="Carrito" color="inherit" onClick={handleClickOpen}>
+              <Badge badgeContent= {productsCout} color="secondary">
+                <ShoppingCartRounded />
+              </Badge>
+            </IconButton>
+            <Link to= "/orders" className="btn btn-dark mr-4 ml-3">
+              Ordenes
             </Link>
-            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
-              PERFIL
-            </Link>
-            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
-              ORDENES
-            </Link>
+            <button className="btn btn-info" onClick={()=>logout()}>
+              Cerrar Sesión
+            </button>
+
           </nav>
 
-          <IconButton aria-label="Carrito" color="inherit" onClick={handleClickOpen}>
-            <Badge badgeContent= {productsCout} color="secondary">
-              <ShoppingCartRounded />
-            </Badge>
-          </IconButton>
+          
           <SimpleDialog selectedValue={selectedValue} open={open} carItems={products} onClose={handleClose} />
 
         </Toolbar>
@@ -212,26 +171,15 @@ const Home = () => {
 
       {/* Footer */}
       <Container maxWidth="md" component="footer" className={classes.footer}>
-        <Grid container spacing={4} justify="space-evenly">
-          {footers.map((footer) => (
-            <Grid item xs={6} sm={3} key={footer.title}>
-              <Typography variant="h6" color="textPrimary" gutterBottom>
-                {footer.title}
-              </Typography>
-              <ul>
-                {footer.description.map((item) => (
-                  <li key={item}>
-                    <Link href="#" variant="subtitle1" color="textSecondary">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Grid>
-          ))}
-        </Grid>
         <Box mt={5}>
-          <Copyright />
+          <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <a>
+              H O R I Z O N
+            </a>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+          </Typography>
         </Box>
       </Container>
       {/* End footer */}
@@ -239,4 +187,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default withRouter(Home);

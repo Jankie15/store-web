@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { useQuery, useMutation } from '@apollo/client';
+import { withRouter } from "react-router-dom";
 
 // Interfaz
 import Dialog from '@material-ui/core/Dialog';
@@ -20,7 +21,7 @@ import {GET_ORDERS} from '../../query/index';
 import {UPDATE_ORDER} from '../../mutation/index';
 import { Button, Container } from '@material-ui/core';
 
-const OrderAdmin = () => {
+const OrderAdmin = ({history}) => {
 
     const {loading, error, data, refetch} = useQuery(GET_ORDERS);
     const [updateOrder] = useMutation(UPDATE_ORDER);
@@ -75,10 +76,19 @@ const OrderAdmin = () => {
         setShowAlert(false);
     }
 
+    const logout = () =>{
+        history.push(`/`);
+        localStorage.clear();
+        //setShowAlert(false);
+    }
     return (
         <div className="container">
             <Container component={Paper} className="p-3 mt-3">
-                <h1 className="mt-3">Ordenes</h1>
+                <div className="row p-2 mt-3 d-flex justify-content-between">
+                    <h1>Ordenes</h1>
+                    <button type="button"  className="btn btn-dark mt-2" style={{height:'40px'}} onClick={()=>logout()}>Cerrar sesión</button>
+                </div>
+                
                 <Collapse in={showSuccesAlert}>
                     <Alert severity="success">Se ha actualizado correctamente el estado de la orden</Alert>
                     <br/>
@@ -195,4 +205,4 @@ const OrderAdmin = () => {
     );
 }
 
-export default OrderAdmin;
+export default withRouter(OrderAdmin);

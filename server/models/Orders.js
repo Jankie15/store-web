@@ -23,7 +23,6 @@ const OrdertSchema = new mongoose.Schema({
     },
     estimated_date:{
         type: String,
-        required: true,
     },
 });
 module.exports = mongoose.model('Orders', OrdertSchema);

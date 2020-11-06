@@ -27,7 +27,7 @@ const resolvers = {
         // Orders
         //----------------------------------------
         getOrders: async(root, {})=>{
-            const order = await Orders.find({});
+            const order = await Orders.find({}).sort({date: -1});
             return order;
         },
         getOrderByUser: async(root, {id})=>{
