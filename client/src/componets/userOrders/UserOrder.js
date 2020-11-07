@@ -1,45 +1,27 @@
 import React, {useState, forwardRef, useEffect} from 'react';
 import { useQuery } from '@apollo/client';
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 
 // Interfaz
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import MenuItem from '@material-ui/core/MenuItem';
-import CloseIcon from '@material-ui/icons/Close';
-import { Button, Container, IconButton, AppBar, Toolbar, Paper, Slide, Dialog } from '@material-ui/core';
-import Timeline from '@material-ui/lab/Timeline';
-import TimelineItem from '@material-ui/lab/TimelineItem';
-import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
-import TimelineConnector from '@material-ui/lab/TimelineConnector';
-import TimelineContent from '@material-ui/lab/TimelineContent';
-import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
+import { Button, Container, IconButton, AppBar, Toolbar, Paper, Slide, Dialog, Typography, makeStyles, Table, TableCell, TableContainer, TableHead, TableRow, TableBody } from '@material-ui/core';
+import {Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineOppositeContent, TimelineDot} from '@material-ui/lab/';
+
+// Icons
 import DoneAllIcon from '@material-ui/icons/DoneAll';
-import TimelineDot from '@material-ui/lab/TimelineDot';
-
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
+import CloseIcon from '@material-ui/icons/Close';
 
-
-
-// Other imports
+// Otros importes
 import moment from 'moment';
 import { GET_ORDERS_BY_USER } from '../../query/index';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+// Transición al abrir la ventana de mostrar mas detalles del pedido
+const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
+// Creo los estilos de Material UI
 const useStyles = makeStyles((theme) => ({
     paper: {
         padding: '6px 16px',
@@ -67,32 +49,33 @@ const useStyles = makeStyles((theme) => ({
 
 const UserOrder = ({history}) => {
 
-    const { loading, error, data, refetch } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') } });
+    // State del componente
     const [openDialog, setOpenDialog] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
-
+    
+    // State de la aplicación
+    const { loading, error, data } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') }, pollInterval: 1000 });
+  
+    // Función de seguridad para verificar que esta parte de la aplicación solo sea accesible por usuarios autenticados
     useEffect(() => {
         if(localStorage.getItem('type') !== 'Normal'){
             history.push('/');
         }
     });
+
+    // Inicializo los estilos de Material
     const classes = useStyles();
 
     if (loading) return 'Loading...';
     if (error) return 'Error';
 
+    // Abrir la ventana que muestra los datos del pedido
     const showDetails = (order) => {
         setOrderDetails(order);
         setOpenDialog(true);
-
-        console.log(orderDetails.id);
-        /*
-        orderDetails.products.map((value)=>{
-            console.log(value.product_id);
-        });
-        */
     }
 
+    // Cierro la ventana
     const handleClose = () => {
         setOpenDialog(false);
     }
@@ -101,6 +84,9 @@ const UserOrder = ({history}) => {
     return (
         <div className="container">
             <Container component={Paper} className="p-3 mt-3">
+                <Link to= "/home" className="btn btn-dark mr-4">
+                    &lt; Volver
+                </Link>
                 <h1 className="mt-3">Ordenes de {localStorage.getItem('name')}</h1>
                 <br />
                 <table className="table table-hover">

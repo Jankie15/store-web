@@ -17,7 +17,7 @@ import { Button, Container } from '@material-ui/core';
 const OrderAdmin = ({history}) => {
 
     // Query para realizar la consultas de ordenes
-    const {loading, error, data, refetch} = useQuery(GET_ORDERS);
+    const {loading, error, data, refetch} = useQuery(GET_ORDERS, {pollInterval: 1000});
 
     // Mutation para actualizar una orden
     const [updateOrder] = useMutation(UPDATE_ORDER);
