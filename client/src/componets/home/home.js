@@ -90,8 +90,8 @@ const Home = ({history}) => {
   // Cerrar la ventana emergente del carrito
   const handleClose = (value) => {
     setproductsCout(0);
-  
     setOpen(false);
+    setProducts([{}]);
    
   };
 

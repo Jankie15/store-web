@@ -97,6 +97,7 @@ const UserOrder = ({history}) => {
 
     return (
         <div className="container">
+            
             <Container component={Paper} className="p-3 mt-3">
                 <h1 className="mt-3">Ordenes de {localStorage.getItem('name')}</h1>
                 <br />
