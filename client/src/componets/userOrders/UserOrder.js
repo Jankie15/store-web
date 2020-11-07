@@ -1,12 +1,9 @@
-import React, {useState, forwardRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useQuery } from '@apollo/client';
 import { withRouter } from "react-router-dom";
 
 // Interfaz
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import MenuItem from '@material-ui/core/MenuItem';
+
 import CloseIcon from '@material-ui/icons/Close';
 import { Button, Container, IconButton, AppBar, Toolbar, Paper, Slide, Dialog } from '@material-ui/core';
 import Timeline from '@material-ui/lab/Timeline';
@@ -67,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UserOrder = ({history}) => {
 
-    const { loading, error, data, refetch } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') } });
+    const { loading, error, data/*, refetch*/ } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') } });
     const [openDialog, setOpenDialog] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
 
@@ -137,7 +134,7 @@ const UserOrder = ({history}) => {
                             </IconButton>
                         </Toolbar>
                     </AppBar>
-                    <Container maxWidth="md">
+                    <Container minWidth="md">
                         <div className="mt-5 p-4">
 
                             <Timeline align="alternate">
@@ -156,7 +153,7 @@ const UserOrder = ({history}) => {
                                     <TimelineContent>
                                         <Paper elevation={3} className={classes.paper}>
                                             <Typography variant="h6" component="h1">
-                                               Pocesando
+                                               Procesando
                                 </Typography>
                                             <Typography>Estamos procesando tu pedido</Typography>
                                         </Paper>
@@ -228,7 +225,7 @@ const UserOrder = ({history}) => {
 
                         </div>
                     </Container>
-                    <Container maxWidth="md">
+                    <Container >
                     <TableContainer component={Paper}>
                         <Table minWidth= '650' aria-label="simple table">
                             <TableHead style={{marginLeft:'500'}}>

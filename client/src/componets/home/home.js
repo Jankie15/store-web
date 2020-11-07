@@ -65,7 +65,7 @@ const Home = ({history}) => {
   const [products, setProducts] = useState([{}]);
   const [productsCout, setproductsCout] = useState(0);
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState();
+  //const [selectedValue, setSelectedValue] = useState();
 
   // Query para  obtener los productos
   const { loading, error, data } = useQuery(GET_PRODUCTS);
@@ -89,8 +89,10 @@ const Home = ({history}) => {
   };
   // Cerrar la ventana emergente del carrito
   const handleClose = (value) => {
+    setproductsCout(0);
+  
     setOpen(false);
-    setSelectedValue(value);  
+   
   };
 
   // Funcion para cerrar sesión
@@ -137,8 +139,8 @@ const Home = ({history}) => {
 
       <Container maxWidth="md" component="main">
         <GridList cellHeight={"auto"} className={classes.gridList} cols={3} spacing={20}>
-          {data.getProducts.map((pro) => (
-            <Card className={classes.root}>
+          {data.getProducts.map((pro,index) => (
+            <Card className={classes.root} key ={index}>
 
               <CardMedia
                 className={classes.media}
@@ -166,12 +168,12 @@ const Home = ({history}) => {
           ))}
         </GridList>
       </Container>
-      <SimpleDialog selectedValue={selectedValue} open={open} carItems={products} onClose={handleClose} />
+      <SimpleDialog  open={open} carItems={products} onClose={handleClose} />
       <Container maxWidth="md" component="footer" className={classes.footer}>
         <Box mt={5}>
           <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <a>
+            <a href = "//#region ">
               H O R I Z O N
             </a>{' '}
             {new Date().getFullYear()}
