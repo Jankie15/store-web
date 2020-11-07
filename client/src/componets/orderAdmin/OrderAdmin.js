@@ -140,7 +140,7 @@ const OrderAdmin = ({history}) => {
                     <DialogContent dividers>
                         <h5>Numero de orden</h5>
                         <p>
-                           {orderDetails.id}
+                           {orderDetails.order}
                         </p>
                         <h5>Fecha</h5>
                         <p>
