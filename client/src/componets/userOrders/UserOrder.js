@@ -3,9 +3,9 @@ import { useQuery } from '@apollo/client';
 import { withRouter, Link } from "react-router-dom";
 
 // Interfaz
-import { Button, Container, IconButton, AppBar, Toolbar, Paper, Slide, Dialog, Typography, makeStyles, Table, TableCell, TableContainer, TableHead, TableRow, TableBody } from '@material-ui/core';
+import { Button, Container, IconButton, AppBar, Toolbar, Paper,Avatar, Slide, Dialog, Typography, makeStyles, Table, TableCell, TableContainer, TableHead, TableRow, TableBody } from '@material-ui/core';
 import {Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineOppositeContent, TimelineDot} from '@material-ui/lab/';
-
+import { blue } from '@material-ui/core/colors';
 // Icons
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
@@ -43,6 +43,13 @@ const useStyles = makeStyles((theme) => ({
     },
     pos: {
         marginBottom: 12,
+    },
+    avatar: {
+        backgroundColor: blue[100],
+        color: blue[600],
+        width: 80,
+        height: 80,
+        marginRight: 25
     },
 }));
 
@@ -223,7 +230,7 @@ const UserOrder = ({history}) => {
                         <Table minWidth= '650' aria-label="simple table">
                             <TableHead style={{marginLeft:'500'}}>
                             <TableRow>
-                               
+                                <TableCell>Referencia</TableCell>
                                 <TableCell>Producto</TableCell>
                                 <TableCell align="right">Cantidad</TableCell>
                                
@@ -233,8 +240,9 @@ const UserOrder = ({history}) => {
                             { orderDetails.products ? 
                                 orderDetails.products.map((value, index) => (
                                 <TableRow key={index}>
-                                <TableCell component="th" scope="row"> {value.product_id.name}</TableCell>
-                                <TableCell align="right">{value.quantity}</TableCell>
+                                <TableCell component="th" scope="row"> <Avatar className={classes.avatar} src={value.product_id.photo} /></TableCell>
+                                <TableCell component="th" scope="row">  <Typography variant="h6" component="h1">{value.product_id.name}</Typography></TableCell>
+                                <TableCell align="right"><Typography variant="h6" component="h1">{value.quantity}</Typography></TableCell>
                               
                                
                                 </TableRow>
