@@ -27,12 +27,12 @@ const resolvers = {
         // Orders
         //----------------------------------------
         getOrders: async(root, {})=>{
-            const order = await Orders.find({})/*populate([{path: 'products.product_id', model: 'Products'}])*/.sort({date: -1});
+            const order = await Orders.find({}).populate([{path: 'products.product_id', model: 'Products'}]).sort({date: -1});
             //console.log(order);
             return order;
         },
         getOrderByUser: async(root, {id})=>{
-            const orders = await Orders.find({user_id: id})/*.populate([{path: 'products.product_id', model: 'Products'}])*/.sort({date: -1});
+            const orders = await Orders.find({user_id: id}).populate([{path: 'products.product_id', model: 'Products'}]).sort({date: -1});
 
             //console.log(orders);
             return orders;

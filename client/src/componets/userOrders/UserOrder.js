@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 const UserOrder = ({history}) => {
 
     // State del componente
-    const { loading, error, data/*, refetch*/ } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') } });
+    const { loading, error, data/*, refetch*/ } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') }, pollInterval:1000 });
     const [openDialog, setOpenDialog] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
   
@@ -223,6 +223,7 @@ const UserOrder = ({history}) => {
                         <Table minWidth= '650' aria-label="simple table">
                             <TableHead style={{marginLeft:'500'}}>
                             <TableRow>
+                               
                                 <TableCell>Producto</TableCell>
                                 <TableCell align="right">Cantidad</TableCell>
                                
@@ -232,7 +233,7 @@ const UserOrder = ({history}) => {
                             { orderDetails.products ? 
                                 orderDetails.products.map((value, index) => (
                                 <TableRow key={index}>
-                                <TableCell component="th" scope="row"> {value.product_id}</TableCell>
+                                <TableCell component="th" scope="row"> {value.product_id.name}</TableCell>
                                 <TableCell align="right">{value.quantity}</TableCell>
                               
                                

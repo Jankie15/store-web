@@ -18,7 +18,7 @@ const typeDefs = gql`
     }
     
     type ProductOrder{
-        product_id: ID!
+        product_id: Product!
         quantity: Int
     }
 

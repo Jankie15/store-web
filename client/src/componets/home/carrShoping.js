@@ -148,6 +148,7 @@ const SimpleDialog = (props) => {
                                         <ListItemAvatar>
                                             <Avatar className={classes.avatar} src={value.value.photo} >
                                                 <ShoppingBasketIcon />
+                                                
                                                 {lista.push(value.value.id)}
                                                 {listaPrecios.push(value.value.value)}
                                                 

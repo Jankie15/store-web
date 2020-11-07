@@ -6,7 +6,10 @@ query getOrders{
       id
       user_id
       products {
-        product_id
+        product_id {
+          name
+          photo
+        }
         quantity
       }
       total
@@ -23,7 +26,10 @@ query getOrderByUser($id: ID){
       id
       user_id
       products {
-        product_id
+        product_id {
+          name
+          photo
+        }
         quantity
       }
       total
