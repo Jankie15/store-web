@@ -38,7 +38,7 @@ const useStyles = makeStyles({
 const SimpleDialog = (props) => {
 
     // State del componente
-    const [products, setProducts] = useState([]);
+    //const [products, setProducts] = useState([]);
     const [user_id] = useState(localStorage.getItem('id'));
     const [date] = useState(new Date());
     const [status] = useState('PROCESANDO');
@@ -46,7 +46,7 @@ const SimpleDialog = (props) => {
 
     // Mutation de crear orden
     const [createOrder] = useMutation(CREATE_ORDER);
-
+    
     // Variable de apoyo
     const lista = [];
     const listaPrecios = [];
@@ -55,15 +55,15 @@ const SimpleDialog = (props) => {
     const classes = useStyles();
 
     // Obtengo las variables que obtengo por props
-    const { onClose, selectedValue, open } = props;
+    const { onClose, open } = props;
 
     // Cerrar la ventana emergente del carrito
     const handleClose = () => {
-        onClose(selectedValue);
+        onClose();
     };
 
     // Función para realizar la compra
-    const buyProducts = async(value) => {
+    const buyProducts = async() => {
         
         // Variables de apoyo para el proceso de eliminiación de repetidos 
         var quantity =1;
@@ -86,7 +86,7 @@ const SimpleDialog = (props) => {
                 id = lista[i];              
             }
             if(id !== undefined){
-                console.log(id);
+                //console.log(id);
                 objeto = {product_id: id, quantity}; 
                 listaApo.push(objeto);
                 id = '';
@@ -94,37 +94,37 @@ const SimpleDialog = (props) => {
                 quantity = 1;
             }       
         }
-        setProducts(listaApo);   
+    
 
         for(let i = 0; i<listaPrecios.length; i++){
-            console.log(listaPrecios[i]);
+            //console.log(listaPrecios[i]);
             ordenTotal = ordenTotal + listaPrecios[i];
         }
         
-        console.log(ordenTotal);
+      
         // Creo el input para enviarlo al mutation
         const input = {
-            products,
+            products: listaApo,
             user_id,
             total: ordenTotal,
             date,
             status,
             estimated_date
         }
-
         // Ejecto el mutation
+       
         try{
             const correctOrder = await createOrder({variables: {input}})
             if(correctOrder.data.createOrder === 'Guardado exitosamente'){
-                setProducts([]);
-                onClose(value);
+                //setProducts([]);
+                onClose();
             }
         }catch (error) {}
         
     };
 
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth={300}>
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
             <DialogTitle id="simple-dialog-title">Mi Carrito</DialogTitle>
             {
                 <List>
@@ -140,22 +140,22 @@ const SimpleDialog = (props) => {
                         :
                         <div>
                             {
-                                props.carItems.map((index) => index.value != null ? (
+                                props.carItems.map((value,index) => value.value != null ? (
 
                                     
-                                    <ListItem  key={index.value.id}>
+                                    <ListItem  key={index}>
                                         
                                         <ListItemAvatar>
-                                            <Avatar className={classes.avatar} src={index.value.photo} >
+                                            <Avatar className={classes.avatar} src={value.value.photo} >
                                                 <ShoppingBasketIcon />
-                                                {lista.push(index.value.id)}
-                                                {listaPrecios.push(index.value.value)}
+                                                {lista.push(value.value.id)}
+                                                {listaPrecios.push(value.value.value)}
                                                 
                                             </Avatar>
                                         </ListItemAvatar>
                                        
-                                        <ListItemText primary={index.value.name} />
-                                        <ListItemText primary={index.value.value} />
+                                        <ListItemText primary={value.value.name} />
+                                        <ListItemText primary={value.value.value} />
 
                                     </ListItem>
 

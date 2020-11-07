@@ -1,4 +1,4 @@
-import React, {useState, forwardRef, useEffect} from 'react';
+import React, {useState, useEffect, forwardRef} from 'react';
 import { useQuery } from '@apollo/client';
 import { withRouter, Link } from "react-router-dom";
 
@@ -50,11 +50,9 @@ const useStyles = makeStyles((theme) => ({
 const UserOrder = ({history}) => {
 
     // State del componente
+    const { loading, error, data/*, refetch*/ } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') } });
     const [openDialog, setOpenDialog] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
-    
-    // State de la aplicación
-    const { loading, error, data } = useQuery(GET_ORDERS_BY_USER, { variables: { id: localStorage.getItem('id') }, pollInterval: 1000 });
   
     // Función de seguridad para verificar que esta parte de la aplicación solo sea accesible por usuarios autenticados
     useEffect(() => {
@@ -83,6 +81,7 @@ const UserOrder = ({history}) => {
 
     return (
         <div className="container">
+            
             <Container component={Paper} className="p-3 mt-3">
                 <Link to= "/home" className="btn btn-dark mr-4">
                     &lt; Volver
@@ -123,7 +122,7 @@ const UserOrder = ({history}) => {
                             </IconButton>
                         </Toolbar>
                     </AppBar>
-                    <Container maxWidth="md">
+                    <Container minWidth="md">
                         <div className="mt-5 p-4">
 
                             <Timeline align="alternate">
@@ -142,7 +141,7 @@ const UserOrder = ({history}) => {
                                     <TimelineContent>
                                         <Paper elevation={3} className={classes.paper}>
                                             <Typography variant="h6" component="h1">
-                                               Pocesando
+                                               Procesando
                                 </Typography>
                                             <Typography>Estamos procesando tu pedido</Typography>
                                         </Paper>
@@ -214,7 +213,7 @@ const UserOrder = ({history}) => {
 
                         </div>
                     </Container>
-                    <Container maxWidth="md">
+                    <Container >
                     <TableContainer component={Paper}>
                         <Table minWidth= '650' aria-label="simple table">
                             <TableHead style={{marginLeft:'500'}}>
