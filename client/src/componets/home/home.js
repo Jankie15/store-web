@@ -3,7 +3,8 @@ import { useQuery } from '@apollo/client';
 import { withRouter, Link } from 'react-router-dom';
 
 // Interfaz
-import {AppBar, Card, CardActions, CardContent, CssBaseline, Toolbar, Typography, CardMedia, makeStyles, Container, Box, GridList, IconButton, Badge} from '@material-ui/core/';
+import {AppBar, Card, CardActions, CardContent, CssBaseline, Toolbar, Typography, CardMedia, makeStyles, Container, Box, GridList, IconButton, Badge, Collapse} from '@material-ui/core/';
+import Alert from '@material-ui/lab/Alert';
 
 // Otros importes
 import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
@@ -65,7 +66,7 @@ const Home = ({history}) => {
   const [products, setProducts] = useState([{}]);
   const [productsCout, setproductsCout] = useState(0);
   const [open, setOpen] = useState(false);
-  //const [selectedValue, setSelectedValue] = useState();
+  const [showSuccesAlert, setShowSuccesAlert] = useState(false);
 
   // Query para  obtener los productos
   const { loading, error, data } = useQuery(GET_PRODUCTS);
@@ -92,7 +93,10 @@ const Home = ({history}) => {
     setproductsCout(0);
     setOpen(false);
     setProducts([{}]);
-   
+    setShowSuccesAlert(true);
+    setTimeout(() => {
+        setShowSuccesAlert(false);
+    }, 3000);
   };
 
   // Funcion para cerrar sesión
@@ -127,6 +131,10 @@ const Home = ({history}) => {
           </nav>
         </Toolbar>
       </AppBar>
+      <Collapse in={showSuccesAlert}>
+          <Alert severity="success">Se ha realizado la compra con éxito</Alert>
+          <br/>
+      </Collapse>
 
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>

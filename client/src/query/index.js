@@ -4,6 +4,7 @@ export const GET_ORDERS = gql`
 query getOrders{
     getOrders{
       id
+      order
       user_id
       products {
         product_id {
@@ -24,6 +25,7 @@ export const GET_ORDERS_BY_USER = gql`
 query getOrderByUser($id: ID){
     getOrderByUser(id: $id){
       id
+      order
       user_id
       products {
         product_id {

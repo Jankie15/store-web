@@ -121,7 +121,7 @@ const OrderAdmin = ({history}) => {
                             data.getOrders.map((order, index)=>(
                                 <>
                                     <tr key={index}>
-                                        <th scope="row">{order.id}</th>
+                                        <th scope="row">{order.order}</th>
                                         <td>{moment(order.date).format('DD/MM/YYYY')}</td>
                                         <td>{order.status}</td>
                                         <td><Button variant="contained" color="default" onClick={()=>showDetails(order)}>Ver más</Button></td>
@@ -179,7 +179,7 @@ const OrderAdmin = ({history}) => {
                                         orderDetails.products.map((orderProducts)=>(
                                             <>
                                                 <tr>
-                                                    <th>{orderProducts.product_id}</th>
+                                                    <th>{orderProducts.product_id.name}</th>
                                                     <td>{orderProducts.quantity}</td>
                                                 </tr>
                                             </>

@@ -102,7 +102,7 @@ const UserOrder = ({history}) => {
                             data.getOrderByUser.map((order, index) => (
                                 <>
                                     <tr key={index}>
-                                        <th scope="row">{order.id}</th>
+                                        <th scope="row">{order.order}</th>
                                         <td>{moment(order.date).format('DD/MM/YYYY')}</td>
                                         <td>{order.status}</td>
                                         <td><Button variant="contained" color="default" onClick={() => showDetails(order)}>Ver más</Button></td>

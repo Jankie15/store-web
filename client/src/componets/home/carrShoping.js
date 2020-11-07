@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
+import cryptoRandomString from 'crypto-random-string';
 
 // Interfaz
 import {Dialog, DialogTitle, ListItemText, ListItemAvatar, ListItem, List, Avatar, makeStyles} from '@material-ui/core/';
@@ -104,6 +105,7 @@ const SimpleDialog = (props) => {
       
         // Creo el input para enviarlo al mutation
         const input = {
+            order: cryptoRandomString({length: 8}).toUpperCase(),
             products: listaApo,
             user_id,
             total: ordenTotal,

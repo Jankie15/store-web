@@ -24,6 +24,7 @@ const typeDefs = gql`
 
     type Order {
         id: ID
+        order: String
         products: [ProductOrder]
         user_id: ID
         total: Int
@@ -58,6 +59,7 @@ const typeDefs = gql`
 
     input OrderInput {
         id: ID
+        order: String
         products: [ProductOrderInput]
         user_id: ID
         total: Int
