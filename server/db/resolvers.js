@@ -31,7 +31,7 @@ const resolvers = {
             return order;
         },
         getOrderByUser: async(root, {id})=>{
-            const orders = await Orders.find({user_id: id});
+            const orders = await Orders.find({user_id: id}).sort({date: -1});
             return orders;
         }
     },
@@ -96,7 +96,7 @@ const resolvers = {
                 throw new Error('Producto no encontrado');
             }
 
-            // Actualizar la prodcuto
+            // Actualizar el prodcuto
             product = await Products.findOneAndUpdate({_id: id}, input);
 
             return "Producto editado correctamente";
@@ -130,14 +130,14 @@ const resolvers = {
             }
         },
         updateOrder: async(root, {input})=>{
-            // Revisar si el prodcuto existe
+            // Revisar si la orden existe
             let order = await Orders.findById(input.id);
 
             if (!order){
                 throw new Error('Orden no encontrada');
             }
 
-            // Actualizar la prodcuto
+            // Actualizar la orden
             order = await Orders.findOneAndUpdate({_id: input.id}, input);
 
             return "Orden editada correctamente";

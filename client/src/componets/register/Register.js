@@ -3,43 +3,43 @@ import { useMutation } from '@apollo/client';
 import { withRouter} from "react-router-dom";
 
 // Interfaz
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { makeStyles, Typography, CssBaseline, TextField, Button, Container, Collapse } from '@material-ui/core/';
 import Alert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
 
 // Mutations
 import {CREATE_USER} from '../../mutation/index';
 
 const Register = ({history}) => {
 
-
+    // State de la aplicación
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showAlert, setShowAlert] = useState(false);
+
+    // Llamar al mutation
     const [createUser] = useMutation(CREATE_USER);
 
+    // Funcipin encargada de manejar el registro de usuarios
     const handleRegister = async() => {
+
+        // Creo el input con los datos del state y unos estaticos
         const input = {
             name,
             email,
             password,
             type: 'Normal'
           };
-          
           try {
+            // Llamo el mutation con el input necesario creado previamente
             const correctUser = await createUser({variables:{input}});
             
+            // En caso de que el usuario haya sido creado correctamente se le redirige al Login
             if(correctUser.data.createUser === 'Guardado exitosamente'){
               history.push(`/`);
             }
           } catch (error) {
-
+            // Muestro un alerta en caso de que algun error suceda
             setName('');
             setEmail('');
             setPassword('');
@@ -52,6 +52,7 @@ const Register = ({history}) => {
     }
 
 
+    // Styles necesarios para el buen funcionamiento de Material-UI
     const style = makeStyles((theme) => ({
         paper: {
         marginTop: theme.spacing(8),
@@ -72,6 +73,7 @@ const Register = ({history}) => {
         },
     }));
 
+    // Inicializo los estilos
     const styles = style();
 
     return (

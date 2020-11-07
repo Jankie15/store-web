@@ -1,21 +1,20 @@
 import React, {useState} from 'react';
 import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
+
+// Interfaz
+import {Dialog, DialogTitle, ListItemText, ListItemAvatar, ListItem, List, Avatar, makeStyles} from '@material-ui/core/';
+
+// Iconos y colores
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import WarningIcon from '@material-ui/icons/Warning';
 import { blue, green, red } from '@material-ui/core/colors';
 
+// Otros importes
 import {CREATE_ORDER} from '../../mutation/index'
 
+// Creo los styles para Material UI
 const useStyles = makeStyles({
     avatar: {
         backgroundColor: blue[100],
@@ -38,38 +37,43 @@ const useStyles = makeStyles({
 
 const SimpleDialog = (props) => {
 
+    // State del componente
     const [products, setProducts] = useState([]);
-    const [user_id, setuser_id] = useState(localStorage.getItem('id'));
-    const [total, setTotal] = useState(0);
-    const [date, setDate] = useState(new Date());
-    const [status, setStatus] = useState('PROCESANDO');
-    const [estimated_date, setEstimated_date] = useState('');
+    const [user_id] = useState(localStorage.getItem('id'));
+    const [date] = useState(new Date());
+    const [status] = useState('PROCESANDO');
+    const [estimated_date] = useState('');
+
+    // Mutation de crear orden
     const [createOrder] = useMutation(CREATE_ORDER);
 
+    // Variable de apoyo
     const lista = [];
+    const listaPrecios = [];
+
+    // Inicializo las estilos de Material 
     const classes = useStyles();
+
+    // Obtengo las variables que obtengo por props
     const { onClose, selectedValue, open } = props;
 
+    // Cerrar la ventana emergente del carrito
     const handleClose = () => {
         onClose(selectedValue);
     };
 
+    // Función para realizar la compra
     const buyProducts = async(value) => {
+        
+        // Variables de apoyo para el proceso de eliminiación de repetidos 
         var quantity =1;
         var id = '';
         let objeto = {};
         let listaApo =[];
+        let ordenTotal = 0;
 
-        const input = {
-            products,
-            user_id,
-            total,
-            date,
-            status,
-            estimated_date
-        }
-
-       //Cuenta y elimina los repetidos al carrito      
+        
+        //Cuenta y elimina los repetidos al carrito      
         for(let i=0; i< lista.length; i++){
             for(let j=i+1; j< lista.length; j++){          
                 if(lista[i]===lista[j]){
@@ -90,23 +94,35 @@ const SimpleDialog = (props) => {
                 quantity = 1;
             }       
         }
-        setProducts(listaApo);
-        console.log(input);       
+        setProducts(listaApo);   
+
+        for(let i = 0; i<listaPrecios.length; i++){
+            console.log(listaPrecios[i]);
+            ordenTotal = ordenTotal + listaPrecios[i];
+        }
         
+        console.log(ordenTotal);
+        // Creo el input para enviarlo al mutation
+        const input = {
+            products,
+            user_id,
+            total: ordenTotal,
+            date,
+            status,
+            estimated_date
+        }
+
+        // Ejecto el mutation
         try{
             const correctOrder = await createOrder({variables: {input}})
             if(correctOrder.data.createOrder === 'Guardado exitosamente'){
-                console.log('lISTO');
+                setProducts([]);
                 onClose(value);
-              }
-        }catch (error) {
-            console.log('Hola');
-        }
+            }
+        }catch (error) {}
         
     };
 
-    //let total = 0;
-    //console.log(products);
     return (
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth={300}>
             <DialogTitle id="simple-dialog-title">Mi Carrito</DialogTitle>
@@ -133,6 +149,7 @@ const SimpleDialog = (props) => {
                                             <Avatar className={classes.avatar} src={index.value.photo} >
                                                 <ShoppingBasketIcon />
                                                 {lista.push(index.value.id)}
+                                                {listaPrecios.push(index.value.value)}
                                                 
                                             </Avatar>
                                         </ListItemAvatar>
@@ -160,6 +177,7 @@ const SimpleDialog = (props) => {
     );
 }
 
+// Hago la especificación de los props que necesita el compoente para funcionars
 SimpleDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,

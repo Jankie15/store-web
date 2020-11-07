@@ -1,30 +1,28 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { withRouter } from "react-router-dom";
 
 // Interfaz
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
+import {Paper, Collapse, MenuItem, Select, DialogTitle, DialogContent, DialogActions, Dialog} from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
 import moment from 'moment';
+import MomentUtils from '@date-io/moment';
 
-// Other imports
+// Otros importes
 import {GET_ORDERS} from '../../query/index';
 import {UPDATE_ORDER} from '../../mutation/index';
 import { Button, Container } from '@material-ui/core';
 
 const OrderAdmin = ({history}) => {
 
+    // Query para realizar la consultas de ordenes
     const {loading, error, data, refetch} = useQuery(GET_ORDERS);
+
+    // Mutation para actualizar una orden
     const [updateOrder] = useMutation(UPDATE_ORDER);
+
+    // State del componente
     const [openDialog, setOpenDialog] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
     const [orderStatus, setOrderStatus] = useState('');
@@ -32,9 +30,14 @@ const OrderAdmin = ({history}) => {
     const [showAlert, setShowAlert] = useState(false);
     const [showSuccesAlert, setShowSuccesAlert] = useState(false);
 
-    if(loading) return 'Loading...';
-    if(error) return 'Error';   
-
+    // Función de seguridad para verificar que esta parte de la aplicación solo sea accesible por usuarios administradores
+    useEffect(() => {
+        if(localStorage.getItem('type') !== 'Admin'){
+            history.push('/');
+        }
+    });
+    
+    // Rellenar la orden para posteriormente mostrarla a nivel de interfaz
     const showDetails = (order) => {
         setOrderDetails(order);
         setOrderEstimatedDate(order.estimated_date === null? moment().format('DD/MM/YYYY'): order.estimated_date);
@@ -42,20 +45,25 @@ const OrderAdmin = ({history}) => {
         setOpenDialog(true);
     }
 
+    // Cierra la ventana emergente del detalle de orden
     const handleClose = () =>{
         setOpenDialog(false);
     }
 
+    // Función que maneja  la actualización de la orden 
     const handleUpdateOrder = async() =>{
+
+        // Creo el input con solo los datos que nececito, en esta caso solo la fecha estimada, estado de orden y id
         const input = {
             id: orderDetails.id,
             status: orderStatus,
             estimated_date: orderEstimatedDate
         };
         try {
+            // Actualizo la orden, con el input
             const successUpdateOrder = await updateOrder({variables:{input}});
-            console.log(successUpdateOrder);
             
+            // Si se actualiza correctamente, llamo la función refetch para actualizar la lista de ordenes y muestro una alerta de exito
             if(successUpdateOrder.data.updateOrder === 'Orden editada correctamente'){
                 refetch();
                 setOpenDialog(false);
@@ -65,22 +73,28 @@ const OrderAdmin = ({history}) => {
                 }, 3000);
             }
             
-        } 
+        }
+        // En caso de que suceda un error muestro una alerta 
         catch (error) {
             console.log(error);
             setShowAlert(true);
         }
     }
 
+    // Función para mostrar alertas
     const handleCloseAlert = () =>{
         setShowAlert(false);
     }
 
+    // Función para cerrar sesión
     const logout = () =>{
         history.push(`/`);
         localStorage.clear();
-        //setShowAlert(false);
     }
+
+    // Si las ordenes aun estan cargando
+    if(loading) return 'Loading...';
+    if(error) return 'Error';   
     return (
         <div className="container">
             <Container component={Paper} className="p-3 mt-3">

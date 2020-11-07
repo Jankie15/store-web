@@ -3,30 +3,29 @@ import { useMutation } from '@apollo/client';
 import { withRouter, Link } from "react-router-dom";
 
 // Interfaz
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import {Button, CssBaseline, TextField, Grid, makeStyles, Container, Collapse, Typography} from '@material-ui/core/';
 import Alert from '@material-ui/lab/Alert';
-import Collapse from '@material-ui/core/Collapse';
 
 // Mutations
 import {AUTH_USER} from '../../mutation/index';
 
-
-
 const Login = ({history}) => {
+  // Limpio el local storage en caso de que tiviera algun residuo
+  localStorage.clear();
 
+  // State del componente
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
+
+  // Mutattion que permite al usuario autenticarse
   const [authUser] = useMutation(AUTH_USER);
 
+  // Funcionn que maneja el inicio de sesion a la aplicación
   const handleLogin = async () =>{
+
+    // En caso de que los campos esten vacio, muestro una alarta
     if(email==='' || password===''){
       setShowAlert(true);
       setAlertText('Por favor rellene los campos');
@@ -36,25 +35,26 @@ const Login = ({history}) => {
       }, 3000);
     }
     else{
+      // En caso de que todo este correcto, relleno el objeto
       const input = {
         email,
         password
       };
       
       try {
+        // Trato de iniciar sesion
         const sesion = await authUser({variables:{input}});
         
-        console.log(sesion);
+        // En caso de que el usuario sea de tipo normal, lo redirijo a la tienda, ademas de rellenar el localstorage.
         if(sesion.data.authUser.id && sesion.data.authUser.type === 'Normal'){
-          localStorage.clear();
           history.push(`/home`);
           localStorage.setItem('id', sesion.data.authUser.id);
           localStorage.setItem('name', sesion.data.authUser.name);
           localStorage.setItem('email', sesion.data.authUser.email);
           localStorage.setItem('type', sesion.data.authUser.type);
         }
+        // En caso de que el usuario sea de tipo adminsitrador, lo redirijo parte administrativa de la aplicación, ademas de rellenar el localstorage.
         if(sesion.data.authUser.id && sesion.data.authUser.type === 'Admin'){
-          localStorage.clear();
           history.push(`/admin`);
           localStorage.setItem('id', sesion.data.authUser.id);
           localStorage.setItem('name', sesion.data.authUser.name);
@@ -62,6 +62,8 @@ const Login = ({history}) => {
           localStorage.setItem('type', sesion.data.authUser.type);
         }
       } catch (error) {
+
+        // En caso de que suceda un error quiere decir que escribio la contraseña incorrecta
         setEmail('');
         setPassword('');
         setShowAlert(true);
@@ -75,6 +77,7 @@ const Login = ({history}) => {
     }
   }
 
+  // Creo los styles para Material-UI
   const style = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -95,6 +98,7 @@ const Login = ({history}) => {
     },
   }));
 
+  // Inicializo los styles
   const styles = style();
 
   return (

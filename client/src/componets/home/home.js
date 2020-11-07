@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import {AppBar, Card, CardActions, CardContent, CssBaseline, Toolbar, Typography, CardMedia, makeStyles, Container, Box, GridList, IconButton, Badge} from '@material-ui/core/';
-import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
-
-import SimpleDialog from './carrShoping';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_PRODUCTS } from '../../query/index';
 import { withRouter, Link } from 'react-router-dom';
 
+// Interfaz
+import {AppBar, Card, CardActions, CardContent, CssBaseline, Toolbar, Typography, CardMedia, makeStyles, Container, Box, GridList, IconButton, Badge} from '@material-ui/core/';
+
+// Otros importes
+import ShoppingCartRounded from '@material-ui/icons/ShoppingCartRounded';
+import SimpleDialog from './carrShoping';
+import { GET_PRODUCTS } from '../../query/index';
+
+// Styles de Material UI
 const useStyles = makeStyles((theme) => ({
   '@global': {
     ul: {
@@ -53,41 +57,49 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = ({history}) => {
-
+  
+  // Inicializo los styles de Material
   const classes = useStyles();
 
+  // State del componente
   const [products, setProducts] = useState([{}]);
   const [productsCout, setproductsCout] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState();
 
-  const emails = ['username@gmail.com', 'user02@gmail.com'];
+  // Query para  obtener los productos
+  const { loading, error, data } = useQuery(GET_PRODUCTS);
 
-  const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState(emails[1]);
-////////////////////////////////////////////////////////////////////////
-//Carrito
-////////////////////////////////////////////////////////////////////////
+  // Función de seguridad para verificar que esta parte de la aplicación solo sea accesible por usuarios autenticados
+  useEffect(() => {
+    if(localStorage.getItem('type') !== 'Normal'){
+        history.push('/');
+    }
+  });
+
+  // Añadir prodcutos al carrito
   const addProductToCarr = (value) => {
-    
     setProducts(products=> [...products,{value}]);
     setproductsCout(productsCout + 1);
   }
 
+  // Abrir la ventana emergente del carrito
   const handleClickOpen = () => {
     setOpen(true);
   };
-
+  // Cerrar la ventana emergente del carrito
   const handleClose = (value) => {
     setOpen(false);
-    setSelectedValue(value);
+    setSelectedValue(value);  
   };
 
+  // Funcion para cerrar sesión
   const logout = () =>{
     history.push(`/`);
     localStorage.clear();
   }
-////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-  const { loading, error, data } = useQuery(GET_PRODUCTS);
+
+  // Si hay un error o esta cargando
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
   return (
@@ -110,16 +122,10 @@ const Home = ({history}) => {
             <button className="btn btn-info" onClick={()=>logout()}>
               Cerrar Sesión
             </button>
-
           </nav>
-
-          
-          <SimpleDialog selectedValue={selectedValue} open={open} carItems={products} onClose={handleClose} />
-
         </Toolbar>
       </AppBar>
 
-      {/* Hero unit */}
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
           Productos
@@ -129,13 +135,9 @@ const Home = ({history}) => {
         </Typography>
       </Container>
 
-
-      {/* End hero unit */}
       <Container maxWidth="md" component="main">
-
         <GridList cellHeight={"auto"} className={classes.gridList} cols={3} spacing={20}>
           {data.getProducts.map((pro) => (
-
             <Card className={classes.root}>
 
               <CardMedia
@@ -157,19 +159,14 @@ const Home = ({history}) => {
                 </IconButton>
                 <Typography gutterBottom variant="h6" component="h2">
                   {pro.value}  Colones
-                  </Typography>
-
+                </Typography>
 
               </CardActions>
             </Card>
           ))}
         </GridList>
-
-
-
       </Container>
-
-      {/* Footer */}
+      <SimpleDialog selectedValue={selectedValue} open={open} carItems={products} onClose={handleClose} />
       <Container maxWidth="md" component="footer" className={classes.footer}>
         <Box mt={5}>
           <Typography variant="body2" color="textSecondary" align="center">
@@ -182,7 +179,6 @@ const Home = ({history}) => {
           </Typography>
         </Box>
       </Container>
-      {/* End footer */}
     </>
   );
 }

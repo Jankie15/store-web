@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config({path: 'variables.env'});
 
+// Metodo de conexion a una base de datos de Mongo Atlas
 const conectarDB = async () =>{
     try{
         await mongoose.connect(process.env.DB_MONGO, {

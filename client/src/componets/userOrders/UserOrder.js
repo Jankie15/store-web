@@ -1,4 +1,4 @@
-import React, {useState, forwardRef} from 'react';
+import React, {useState, forwardRef, useEffect} from 'react';
 import { useQuery } from '@apollo/client';
 import { withRouter} from "react-router-dom";
 
@@ -18,11 +18,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const UserOrder = () => {
+const UserOrder = ({history}) => {
 
     const {loading, error, data, refetch} = useQuery(GET_ORDERS_BY_USER, {variables:{id: localStorage.getItem('id')}});
     const [openDialog, setOpenDialog] = useState(false);
     const [orderDetails, setOrderDetails] = useState({});
+
+    useEffect(() => {
+        if(localStorage.getItem('type') !== 'Normal'){
+            history.push('/');
+        }
+    });
 
     if(loading) return 'Loading...';
     if(error) return 'Error';   
@@ -30,6 +36,13 @@ const UserOrder = () => {
     const showDetails = (order) => {
         setOrderDetails(order);
         setOpenDialog(true);
+
+        console.log(orderDetails.id);
+        /*
+        orderDetails.products.map((value)=>{
+            console.log(value.product_id);
+        });
+        */
     }
 
     const handleClose = () =>{
