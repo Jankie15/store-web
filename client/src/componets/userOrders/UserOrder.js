@@ -162,6 +162,11 @@ const UserOrder = ({history}) => {
                                 </TimelineItem>
                                 {orderDetails.status === 'TRANSITO'? 
                                     <TimelineItem>
+                                         <TimelineOppositeContent>
+                                            <Typography variant="body2" color="textSecondary">Fecha estimada
+                                            {' '+ moment(orderDetails.estimated_date).format('DD/MM/YYYY')}
+                                        </Typography>
+                                        </TimelineOppositeContent>
                                         <TimelineSeparator>
                                             <TimelineDot color="primary">
                                                 <LocalShippingIcon />
