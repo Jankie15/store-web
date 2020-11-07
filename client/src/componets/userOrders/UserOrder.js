@@ -76,10 +76,6 @@ const UserOrder = ({history}) => {
             history.push('/');
         }
     });
-
-    if(loading) return 'Loading...';
-    if(error) return 'Error';   
-    
     const classes = useStyles();
 
     if (loading) return 'Loading...';
